@@ -58,6 +58,8 @@ def generate_frequency(text):
 
 	print(sorted_freq)
 
+	return sorted_freq
+
 
 # Compare two alphanumeric frequencies and return a tuple:
 # 	map
@@ -67,17 +69,10 @@ def map_frequencies(exp_freq, obs_freq):
 	return None
 
 
-<<<<<<< HEAD
-print(sorted_freq)
-	
-
-	
-=======
 # Make a best guess at the cipher text.
 # Add any extra logic we want here!
 def replace_letters(text, freq):
 	return ""
->>>>>>> 7bec690dc6fda1eb0c5442337398d35005383d46
 
 
 # Perform a detailed frequency analysis on a piece of text
