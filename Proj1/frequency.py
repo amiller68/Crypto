@@ -30,7 +30,7 @@ letterFrequency = {'e' : 12.02,
 'q' : 0.11,
 'j' : 0.10,
 'z' : 0.07 }
-'''
+
 def count_letters(s) :
 	filtered = [c for c in s.lower() if c in ascii_letters]
 	return col.Counter(filtered)
@@ -68,4 +68,3 @@ print(sorted_freq)
 	
 def replace_letter(str):
 	pass
-'''
