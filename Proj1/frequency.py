@@ -40,12 +40,12 @@ def count_letters(s) :
 
 def generate_frequency(text):
 	# Alphabet dictionary to count frequency of all letters in our text set
-	num_alpha = dict.fromkeys(string.ascii_lowercase, 0)
+	num_alpha = dict.fromkeys(string.ascii_lowercase, 0.0)
 
 	# Add letters to the alphabet dictionary
 	for i in text:
 		if i in num_alpha:
-			num_alpha[i] += 1
+			num_alpha[i] += 1.0
 
 	print(num_alpha)
 	total_count = sum(num_alpha.values())
@@ -79,6 +79,9 @@ def map_frequencies(obs_freq, exp_freq=None):
 		[v + 0.0001 for (k, v) in sorted_obs_freq]
 	)
 
+	print("ChiSq Stat: " + str(chisq))
+	print("p: " + str(p))
+
 	if p < 0.05:
 		print("Prime for frequency attack")
 		return dict(
@@ -107,7 +110,7 @@ def frequency_analysis(text, v_opt=False):
 
 # Run a detailed frequency analysis on a single file
 if __name__ == "__main__":
-	filename = str(input())
+	filename = 'ctxts/05.txt' # str(input())
 
 	ptxtfile = open(filename)
 	ptxt_str = ptxtfile.read()
