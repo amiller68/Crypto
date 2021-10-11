@@ -1,18 +1,14 @@
 import os
 import frequency
 
-# A dictionary mapping strings to tests we can run on cipher texts.
+# A list of tests we can run on cipher texts.
 # These test functions should take a cipher text as an argument (as read from the file)
 # These tests should return a tuple of type boolean, string
 # The boolean should describe whether or not we think a cipher text matches our test for type
 # The string should detail our best guess for the decoded string.
-# Add tests you want to run here!
-testDict = {
-    'frequency_analysis' : frequency.frequency_analysis
-}
-
 # A list of tests you want to run,
 # Ordering reflects precedence
+# Add tests you want to run here!
 testSet = [
     'frequency_analysis'
 ]
@@ -28,7 +24,7 @@ if __name__ == '__main__':
 
         analysis_str = ""
         for test in testSet:
-            match, best_guess = testDict[test](ctxt)
+            match, best_guess = test(ctxt)
             if match:
                 # Construct output/UI here
                 # Maybe I can add decision logic for types of analysis that would benefit from human decision making
