@@ -65,7 +65,6 @@ sorted_freq = sorted(freq_alpha.items(), key = lambda item: item[1], reverse = T
 
 print(sorted_freq)
 	
-	
-def replace_letter(str):
+
 	
 
