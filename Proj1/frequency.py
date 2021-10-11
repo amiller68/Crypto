@@ -57,6 +57,8 @@ def generate_frequency(text):
 
 	return freq_alpha
 
+	return sorted_freq
+
 
 # Compare two alphanumeric frequencies and return a tuple:
 # 	map
