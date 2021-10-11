@@ -1,5 +1,6 @@
 import os
 import frequency
+from parser import parser
 
 # A list of tests we can run on cipher texts.
 # These test functions should take a cipher text as an argument (as read from the file)
@@ -14,6 +15,8 @@ testSet = [
 ]
 
 if __name__ == '__main__':
+    args = parser.parse_args()
+    #args.v bound to a boolean
     ctxt_dir = 'ctxts/' #Our dir of ctxts
     analysis_dir = 'analysis/'
     file_list = os.listdir(ctxt_dir)
