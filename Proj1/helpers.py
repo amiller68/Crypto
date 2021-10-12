@@ -1,6 +1,10 @@
 import string
 import collections as col
+import more_itertools
 
+# https://stackoverflow.com/questions/1162592/iterate-over-a-string-2-or-n-characters-at-a-time-in-python
+def groups_of_n(n, s):
+    return more_itertools.chunked(s, n)
 
 # Counts the number of characters in an ascii string
 def count_letters(s):

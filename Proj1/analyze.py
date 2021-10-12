@@ -2,6 +2,7 @@ import os
 import frequency
 from parser import parser
 import helpers
+import homophonic
 import json
 
 # A list of tests we can run on cipher texts.

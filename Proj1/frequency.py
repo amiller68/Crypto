@@ -35,24 +35,37 @@ letterFrequency = {
 }
 
 
-def generate_frequency(text):
+def generate_frequency(text, spacing=1):
 	# Alphabet dictionary to count frequency of all letters in our text set
-	num_alpha = dict.fromkeys(string.ascii_lowercase, 0.0)
+	if spacing == 1:
+		num_alpha = dict.fromkeys(string.ascii_lowercase, 0.0)
+		freq_alpha = dict.fromkeys(string.ascii_lowercase, None)
+		text = [c for c in text.lower() if c in string.ascii_lowercase and c != '']
+	else:
+		num_alpha = {}
+		freq_alpha = {}
+
 
 	# Add letters to the alphabet dictionary
-	for i in text:
-		if i in num_alpha:
-			num_alpha[i] += 1.0
+	for i in range(0, len(text) - spacing, spacing):
+		char_list = []
+		for j in range(spacing):
+			char_list.append(text[i+j])
+		key = "".join(list(char_list))
+		if key in num_alpha:
+			num_alpha[key] += 1.0
+		else:
+			num_alpha[key] = 1.0
 
+	# print(num_alpha)
 	total_count = sum(num_alpha.values())
 	if total_count == 0:
 		return None
 
 	# Adding percentage frequency of each letter to the dictionary
-	freq_alpha = dict.fromkeys(string.ascii_lowercase, None)
 	for i in num_alpha:
 		freq_alpha[i] = (num_alpha[i] / total_count) * 100
-
+	# print(freq_alpha)
 	return freq_alpha
 
 # Compare two alphanumeric frequencies and return a tuple:
@@ -106,7 +119,7 @@ def frequency_analysis(text, v_opt=False):
 # Run a detailed frequency analysis on a single file
 # DON"T type out the dir when using
 if __name__ == "__main__":
-	filename = 'ctxts/' + str(input())
+	filename = 'ctxts/' + '01.txt'# str(input())
 
 	ptxtfile = open(filename)
 	ptxt_str = ptxtfile.read()
