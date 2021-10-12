@@ -68,6 +68,7 @@ if __name__ == '__main__':
         ctxt = ctxt_data['data']['ctxt']
 
         print("Performing analysis on " + file)
+        print("Text len:" + str(len(ctxt)))
 
         # Frequency analysis
 

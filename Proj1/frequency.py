@@ -86,15 +86,16 @@ def map_frequencies(obs_freq, exp_freq=None):
 		f_exp=[math.log(v + 1.0) for (k, v) in sorted_exp_freq]
 	)
 
-	print("ChiSq Stat: " + str(chisq))
-	print("p: " + str(p))
+	# print("ChiSq Stat: " + str(chisq))
+	# print("p: " + str(p))
 
 	if p > 0.95:
 		print("Prime for frequency attack")
-		return dict(
-			zip([k for (k, v) in sorted_obs_freq], [k for (k, v) in sorted_exp_freq])
-		)
-	return None
+		# return dict(
+		# 	zip([k for (k, v) in sorted_obs_freq], [k for (k, v) in sorted_exp_freq])
+		# )
+
+	return chisq, p
 
 
 # Make a best guess at the cipher text.

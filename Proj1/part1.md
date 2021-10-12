@@ -2,5 +2,47 @@
 ---
 ### Groups:
 **Shift Ciphers:**
-- Ciper text 1
-- 
+- 1 
+
+For this cipher text, we noticed it is alphabetic and seems to have proper punctuation for a real sentence.
+
+We created a simple shift function and applied it to any cipher texts we expected were encoded with a shift cipher. After we tried shifting the texts we found that only ciphertext 1 had a shift cipher.
+
+**Substitution Ciphers:**
+- 11, 16
+
+For these cipher texts, we noticed they are alphabetic, and have random punctuation that may be part of the encoding.
+
+We wrote a script to perform charater frequency analysis on a text, which would help us distinguish shift and substitution ciphers from other cipher texts. We found that ciphers 1, 11, and 16 can likely be broken with frequency analysis. We tried shift on all three of these texts, and found that only cipher text 1 is a shift cipher. Cipher texts 11 and 16 are therefore likely to be substitution ciphers. It is also likely that they have the same key, since their character frequency analysis is similar.
+
+**Polyalphabetic Ciphers:**
+- 6, 14
+
+For these cipher texts, we noticed they are alphabetic, and seem to have proper punctuation for a real sentence.
+
+We wrote a helper function to divide a string into n buckets, then run frequency analysis on those buckets, to determine if a cipher is polyalphabetic and what its potential key length maybe. From this we think that 6 and 14 may be polyalphabetic ciphers with a key length of 10, they may be encrypted with the same key.
+
+**Homophonic Ciphers:**
+- 10, 18
+
+For these cipher texts, we noticed they are alphabetic and have random punctuation. We also noticed a lot of repeated letters.
+
+We think that 10 and 18 may be homophonic ciphers. They did not seem like it could be broken with any kind of frequency analysis, and they have a lot of bigrams. It is possible that they have the same key but more analysis is needed.
+
+
+**One Time Pad Ciphers:**
+- 2, 13
+
+We noticed that these ciphers are the same length, and seem to be in hexadecimal format.
+
+We know that in order for the one time pad cipher to be broken, it must be used twice, and we know that two messages that are encrypted with the same one time pad must of the same length. Of the ciphers that have the same length, 2 and 13 have a similar composition (seems to be hexadecimal), so we think that these are good candidates for having used the same one time pad.
+
+**Unsure**
+- 5, 9, 15,
+
+We are unsure what 5 could be. We think it could be homophonic, but the spacing is throwing us off.
+
+**Mixed**
+- 7, 8, 19, 20 are suspected to all use the same key. They end in the same 5 numbers "627546" which was our hint. 
+- 3, 4, 12, 17 are suspected to all use the same key. They end in the same 3 numbers "696" which was our hint.
+The above two groups could either be homophonic or vigenere. This is just a guess since the numbers don't give us too much insight. 
