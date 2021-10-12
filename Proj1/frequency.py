@@ -1,7 +1,7 @@
 import string 
 import math 
-import collections as col
 from scipy.stats import chisquare, fisher_exact
+from helpers import *
 
 # Dictionary of frequency of letters in the English language
 # Retrieved from http://pi.math.cornell.edu/~mec/2003-2004/cryptography/subs/frequencies.html
@@ -35,11 +35,6 @@ letterFrequency = {
 }
 
 
-def count_letters(s) :
-	filtered = [c for c in s.lower() if c in ascii_letters]
-	return col.Counter(filtered)
-
-
 def generate_frequency(text):
 	# Alphabet dictionary to count frequency of all letters in our text set
 	num_alpha = dict.fromkeys(string.ascii_lowercase, 0.0)
@@ -50,6 +45,8 @@ def generate_frequency(text):
 			num_alpha[i] += 1.0
 
 	total_count = sum(num_alpha.values())
+	if total_count == 0:
+		return None
 
 	# Adding percentage frequency of each letter to the dictionary
 	freq_alpha = dict.fromkeys(string.ascii_lowercase, None)
@@ -57,9 +54,6 @@ def generate_frequency(text):
 		freq_alpha[i] = (num_alpha[i] / total_count) * 100
 
 	return freq_alpha
-
-	return sorted_freq
-
 
 # Compare two alphanumeric frequencies and return a tuple:
 # 	map
@@ -74,7 +68,6 @@ def map_frequencies(obs_freq, exp_freq=None):
 	sorted_exp_freq = sorted(exp_freq.items(), key=lambda item: item[1], reverse=True)
 	sorted_obs_freq = sorted(obs_freq.items(), key=lambda item: item[1], reverse=True)
 
-	# Problem: gives us p = 1.0
 	chisq, p = chisquare(
 		[math.log(v + 1.0) for (k, v) in sorted_obs_freq],
 		f_exp=[math.log(v + 1.0) for (k, v) in sorted_exp_freq]
@@ -102,21 +95,25 @@ def replace_letters(text, freq):
 
 def frequency_analysis(text, v_opt=False):
 	obs_freq = generate_frequency(text)
+	if obs_freq is None:
+		return None, ""
 	map = map_frequencies(obs_freq)  #exp_freq = letterFrequency by default
 	if map:
-		print(map)
 		text = replace_letters(text, map)
-	return text
+	return (map is not None), text
 
 
 # Run a detailed frequency analysis on a single file
+# DON"T type out the dir when using
 if __name__ == "__main__":
-	filename = 'ctxts/18.txt' # str(input())
+	filename = 'ctxts/' + str(input())
 
 	ptxtfile = open(filename)
 	ptxt_str = ptxtfile.read()
 
-
+	if is_hex(ptxt_str):
+		print("This seems to have been encoded in hex!")
+		ptxt_str = read_hex(ptxt_str)
 
 	print(ptxt_str)
 	best_guess = frequency_analysis(ptxt_str)
