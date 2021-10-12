@@ -13,7 +13,8 @@ import json
 # Ordering reflects precedence
 # Add tests you want to run here!
 testSet = [
-    frequency.frequency_analysis
+    frequency.frequency_analysis,
+    homophonic.ngram_analysis
 ]
 
 
@@ -59,6 +60,7 @@ if __name__ == '__main__':
         with open(analysis_dir + "ctxt_data.json", 'r') as f:
             all_ctxt_data = json.load(f)
 
+    comprehensive_analysis = []
     for ctxt_data in all_ctxt_data:
         # Extract anything we need from our meta data
         file = ctxt_data['filename']
@@ -66,15 +68,24 @@ if __name__ == '__main__':
 
         print("Performing analysis on " + file)
 
+        # Frequency analysis
+
         for test in testSet:
             # We might want to consider returning analysis as a json
             match, best_guess = test(ctxt)
-            ctxt_data[test.__name__] = {
-                'match': match,
-                'best_guess': (best_guess if match else "")
-            }
+            if match:
+                ctxt_data['data'][test.__name__] = {
+                    'match': match,
+                    'best_guess': (best_guess if match else "")
+                }
+                break
+        comprehensive_analysis.append(ctxt_data)
 
 
         with open(analysis_dir + file.split(".")[0] + '.json', 'w') as analysis:
             json.dump(ctxt_data, analysis, indent=4)
+
+    # save a file containging all our analysis
+    with open(analysis_dir + 'comprehensive_analysis.json', 'w') as analysis:
+        json.dump(comprehensive_analysis, analysis, indent=4)
 
