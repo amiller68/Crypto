@@ -34,9 +34,11 @@ letterFrequency = {
 	'z' : 0.07
 }
 
+
 def count_letters(s) :
 	filtered = [c for c in s.lower() if c in ascii_letters]
 	return col.Counter(filtered)
+
 
 def generate_frequency(text):
 	# Alphabet dictionary to count frequency of all letters in our text set
@@ -47,7 +49,6 @@ def generate_frequency(text):
 		if i in num_alpha:
 			num_alpha[i] += 1.0
 
-	print(num_alpha)
 	total_count = sum(num_alpha.values())
 
 	# Adding percentage frequency of each letter to the dictionary
@@ -75,45 +76,48 @@ def map_frequencies(obs_freq, exp_freq=None):
 
 	# Problem: gives us p = 1.0
 	chisq, p = chisquare(
-		[v + 0.0001 for (k, v) in sorted_obs_freq],
-		[v + 0.0001 for (k, v) in sorted_obs_freq]
+		[math.log(v + 1.0) for (k, v) in sorted_obs_freq],
+		f_exp=[math.log(v + 1.0) for (k, v) in sorted_exp_freq]
 	)
 
 	print("ChiSq Stat: " + str(chisq))
 	print("p: " + str(p))
 
-	if p < 0.05:
+	if p > 0.95:
 		print("Prime for frequency attack")
 		return dict(
-			zip([k for (k, v) in sorted_obs_freq],[v for (k, v) in sorted_exp_freq])
+			zip([k for (k, v) in sorted_obs_freq], [k for (k, v) in sorted_exp_freq])
 		)
-	print("These don't match :(")
-	print(p)
 	return None
 
 
 # Make a best guess at the cipher text.
 # Add any extra logic we want here!
 def replace_letters(text, freq):
-	return ""
+	return "".join([freq[i] if i in freq else i for i in text])
 
 
 # Perform a detailed frequency analysis on a piece of text
 # Returns a best guess at the cipher
+
 def frequency_analysis(text, v_opt=False):
 	obs_freq = generate_frequency(text)
 	map = map_frequencies(obs_freq)  #exp_freq = letterFrequency by default
 	if map:
+		print(map)
 		text = replace_letters(text, map)
 	return text
 
 
 # Run a detailed frequency analysis on a single file
 if __name__ == "__main__":
-	filename = 'ctxts/05.txt' # str(input())
+	filename = 'ctxts/18.txt' # str(input())
 
 	ptxtfile = open(filename)
 	ptxt_str = ptxtfile.read()
 
+
+
+	print(ptxt_str)
 	best_guess = frequency_analysis(ptxt_str)
 	print(best_guess)
