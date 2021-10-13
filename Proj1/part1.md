@@ -35,12 +35,6 @@ These ciphers all seem to be homophonic ciphers, based on them being only made u
 
 After running our analysis, these cipher texts all seem to use key codes of length 3. They all have trigram alphabets of about the same size as that of the English language (29, 36, and 29 codes, respectively). Additionally, all of these alphabets generate code frequency histograms consistent with the letter frequency histogram of the English language.
 
-
-
-
-
-We noticed that this cipher text is made up of only de
-
 **One Time Pad Ciphers:**
 - 2, 13
 
@@ -55,5 +49,5 @@ We are unsure what 5 could be. We think it could be homophonic, but the spacing 
 
 **Mixed**
 - 7, 8, 19, 20 are suspected to all use the same key. They end in the same 5 numbers "627546" which was our hint. 
-- 3, 4, 12, 17 are suspected to all use the same key. They end in the same 3 numbers "696" which was our hint.
+- 17 suspected to all use the same key. They end in the same 3 numbers "696" which was our hint.
 The above two groups could either be homophonic or vigenere. This is just a guess since the numbers don't give us too much insight. 
