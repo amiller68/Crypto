@@ -29,6 +29,17 @@ For these cipher texts, we noticed they are alphabetic and have random punctuati
 
 We think that 10 and 18 may be homophonic ciphers. They did not seem like it could be broken with any kind of frequency analysis, and they have a lot of bigrams. It is possible that they have the same key but more analysis is needed.
 
+- 3, 4, 12
+
+These ciphers all seem to be homophonic ciphers, based on them being only made up of decimal numbers, which statistically disqualifies them from being the result of an XOR operation. 
+
+After running our analysis, these cipher texts all seem to use key codes of length 3. They all have trigram alphabets of about the same size as that of the English language (29, 36, and 29 codes, respectively). Additionally, all of these alphabets generate code frequency histograms consistent with the letter frequency histogram of the English language.
+
+
+
+
+
+We noticed that this cipher text is made up of only de
 
 **One Time Pad Ciphers:**
 - 2, 13
