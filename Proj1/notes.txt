@@ -1,0 +1,8 @@
+Texts with same length:
+- 1 and 20
+- 2 and 13
+- 9 and 11
+
+Answers:
+01.txt:
+hey alex, you've got to stop reusing that one time pad. the students are onto us. let's switch to a stronger cipher. david
