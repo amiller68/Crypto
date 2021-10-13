@@ -37,7 +37,7 @@ def gen_ctxt_data(ctxt_dir):
             'filename': file,
             'data': {
                 'ctxt': ctxt,
-                'lc': len(ctxt)
+                'lc': len([c for c in ctxt.lower() if c.isalnum() and c != ''])
             }
         }
 
@@ -75,11 +75,12 @@ if __name__ == '__main__':
         for test in testSet:
             # We might want to consider returning analysis as a json
             match, best_guess = test(ctxt)
+
+            ctxt_data['data'][test.__name__] = {
+                'match': match,
+                'best_guess': best_guess
+            }
             if match:
-                ctxt_data['data'][test.__name__] = {
-                    'match': match,
-                    'best_guess': (best_guess if match else "")
-                }
                 break
         comprehensive_analysis.append(ctxt_data)
 

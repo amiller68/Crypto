@@ -42,12 +42,18 @@ We noticed that these ciphers are the same length, and seem to be in hexadecimal
 
 We know that in order for the one time pad cipher to be broken, it must be used twice, and we know that two messages that are encrypted with the same one time pad must of the same length. Of the ciphers that have the same length, 2 and 13 have a similar composition (seems to be hexadecimal), so we think that these are good candidates for having used the same one time pad.
 
-**Unsure**
-- 5, 9, 15,
+- 9, 15
 
-We are unsure what 5 could be. We think it could be homophonic, but the spacing is throwing us off.
+This cipher text was made up of 216 and 211 distinct hex digrams (respectively) in even distributions, suggesting that they is are uniformaly random hex strings. This suggests that it they were likely encoded using a one time pad.
+
+- 17, 19
+
+These ciphers are both made up of long decimal string. Digram analysis on either results in an even distribution of around 100 distinct decimal pairs (79 and 100, respectively). We suspect that they were both were encoded using distinct one time pads, due to their randomly distributed natures.
+
+**Unsure**
+- 5
+
+We are unsure what 5 could be. It seems to be made up of an even distribution of two letter digrams. We think it could be homophonic, but the even distribution of digrams suggests the use of a one time pad.
 
 **Mixed**
-- 7, 8, 19, 20 are suspected to all use the same key. They end in the same 5 numbers "627546" which was our hint. 
-- 17 suspected to all use the same key. They end in the same 3 numbers "696" which was our hint.
-The above two groups could either be homophonic or vigenere. This is just a guess since the numbers don't give us too much insight. 
+- 7, 8, 20 are suspected to all use the same key. They end in the same 5 numbers "627546" which was our hint.

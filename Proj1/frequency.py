@@ -40,10 +40,11 @@ def generate_frequency(text, spacing=1):
 	if spacing == 1:
 		num_alpha = dict.fromkeys(string.ascii_lowercase, 0.0)
 		freq_alpha = dict.fromkeys(string.ascii_lowercase, None)
-		text = [c for c in text.lower() if c in string.ascii_lowercase and c != '']
+		text = [c for c in text if c in string.ascii_lowercase and c != '']
 	else:
 		num_alpha = {}
 		freq_alpha = {}
+		text = [c for c in text if c.isalnum() and c != '']
 
 
 	# Add letters to the alphabet dictionary
@@ -91,11 +92,12 @@ def map_frequencies(obs_freq, exp_freq=None):
 
 	if p > 0.95:
 		print("Prime for frequency attack")
-		# return dict(
-		# 	zip([k for (k, v) in sorted_obs_freq], [k for (k, v) in sorted_exp_freq])
-		# )
+		return dict(
+		 	zip([k for (k, v) in sorted_obs_freq], [k for (k, v) in sorted_exp_freq])
+		)
 
-	return chisq, p
+	# return chisq, p
+	return None
 
 
 # Make a best guess at the cipher text.
