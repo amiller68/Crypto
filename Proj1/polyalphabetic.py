@@ -1,4 +1,4 @@
-from frequency import generate_frequency, map_frequencies
+from frequency import generate_frequency, _map_frequencies
 
 def make_buckets(text, n):
     print("n = " + str(n))
@@ -10,7 +10,7 @@ def make_buckets(text, n):
             bucket.append(text[x])
         joined = ''.join(bucket)
         freq = generate_frequency(joined)
-        chisq, p = map_frequencies(freq)
+        chisq, p = _map_frequencies(freq) #Just returns the chisq test values
         sum_chisq += chisq
         sum_p += p
     print("chisq avg: " + str(sum_chisq / n) + " , p avg: " + str(sum_p / n))

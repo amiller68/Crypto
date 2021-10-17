@@ -74,6 +74,22 @@ def generate_frequency(text, spacing=1):
 # where match is a boolean describing whether two frequencies are similar enough
 # and map is a potential frequency mapping
 # Assumes inputted frequencies normalized to add up to 100.0
+def _map_frequencies(obs_freq, exp_freq=None):
+	if exp_freq is None:
+		exp_freq = letterFrequency
+
+	# Sorted tuple lists of expected frequencies, normalized to 100.0
+	sorted_exp_freq = sorted(exp_freq.items(), key=lambda item: item[1], reverse=True)
+	sorted_obs_freq = sorted(obs_freq.items(), key=lambda item: item[1], reverse=True)
+
+	# Returns chisq, p
+	return chisquare(
+		[math.log(v + 1.0) for (k, v) in sorted_obs_freq],
+		f_exp=[math.log(v + 1.0) for (k, v) in sorted_exp_freq]
+	)
+
+
+# Assumes inputted frequencies normalized to add up to 100.0
 def map_frequencies(obs_freq, exp_freq=None):
 	if exp_freq is None:
 		exp_freq = letterFrequency
@@ -87,17 +103,14 @@ def map_frequencies(obs_freq, exp_freq=None):
 		f_exp=[math.log(v + 1.0) for (k, v) in sorted_exp_freq]
 	)
 
-	# print("ChiSq Stat: " + str(chisq))
-	# print("p: " + str(p))
-
 	if p > 0.95:
 		print("Prime for frequency attack")
 		return dict(
-		 	zip([k for (k, v) in sorted_obs_freq], [k for (k, v) in sorted_exp_freq])
+			zip([k for (k, v) in sorted_obs_freq], [k for (k, v) in sorted_exp_freq])
 		)
 
-	# return chisq, p
 	return None
+
 
 
 # Make a best guess at the cipher text.
