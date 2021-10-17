@@ -45,6 +45,9 @@ def gen_ctxt_data(ctxt_dir):
     return all_ctxt_data
 
 
+verbose_targets = [
+    "03.txt"
+]
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -70,11 +73,13 @@ if __name__ == '__main__':
         print("Performing analysis on " + file)
         print("Text len:" + str(len(ctxt)))
 
-        # Frequency analysis
-
+        if file in verbose_targets:
+            v = True
+        else:
+            v = False
         for test in testSet:
             # We might want to consider returning analysis as a json
-            match, best_guess = test(ctxt)
+            match, best_guess = test(ctxt, v_opt=v)
 
             ctxt_data['data'][test.__name__] = {
                 'match': match,
