@@ -6,3 +6,15 @@ Texts with same length:
 Answers:
 01.txt:
 hey alex, you've got to stop reusing that one time pad. the students are onto us. let's switch to a stronger cipher. david
+
+11.txt:
+I'm making chocolate chip cookies, possibly the greatest dessert of all time. I had a lot of work to do, and I'm very proud of my chocolate chip cookie. 
+I really wanted a cookie with a crispy edge, a chewy, gooey center, and the right balance between the butterschotchy flavors from vanilla and brown sugar and all the chocolate mix in.
+
+I like using two different kinds of chocolate. I like to fold in milk chocolate and dark chocolate. Chopping some of the chocolate so you get big pieces and then like little smaller bits
+folded in. And very importantly, browing the butter. I like the mix of milk and dark chocolates, because for me, too much dark chocolate is too intense and I don't enjoy it. 
+
+Ingredients: butter, two large eggs, a little baking soda, two tablespoons heavy cream, kosher salt, vanilla extract, granulated sugar, dark brown sugar, all purpose flour, then milk
+chocolate and dark chocolate baking discs.
+
+16.txt
