@@ -44,9 +44,9 @@ def gen_ctxt_data(ctxt_dir):
         all_ctxt_data.append(ctxt_data)
     return all_ctxt_data
 
-
+# list any files we want to decrypt using our v option
 verbose_targets = [
-    "03.txt"
+
 ]
 
 if __name__ == '__main__':
@@ -88,7 +88,6 @@ if __name__ == '__main__':
             if match:
                 break
         comprehensive_analysis.append(ctxt_data)
-
 
         with open(analysis_dir + file.split(".")[0] + '.json', 'w') as analysis:
             json.dump(ctxt_data, analysis, indent=4)

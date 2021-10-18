@@ -131,11 +131,24 @@ def frequency_analysis(text, v_opt=False):
 		text = replace_letters(text, map)
 	return (map is not None), text
 
+def digram_freq(ctxt, spacing):
+	# Do our first set of anlysis
+	best_guess = generate_frequency(ctxt, spacing=spacing*2)
+	best_guess = list(sorted(best_guess.items(), key=lambda item: item[1], reverse=True))
+	best_guess = [(k,v) for k,v in best_guess if k[:len(k)//2] == k[len(k)//2:]]
+	print(best_guess)
+
+	# Need another pass to evaulate ALL bigrams
+	ctxt = ctxt[3:]
+	best_guess = generate_frequency(ctxt, spacing=spacing*2)
+	best_guess = list(sorted(best_guess.items(), key=lambda item: item[1], reverse=True))
+	best_guess = [(k, v) for k, v in best_guess if k[:len(k) // 2] == k[len(k) // 2:]]
+	print(best_guess)
 
 # Run a detailed frequency analysis on a single file
 # DON"T type out the dir when using
 if __name__ == "__main__":
-	filename = 'ctxts/' + '01.txt'# str(input())
+	filename = 'ctxts/' + '03.txt'# str(input())
 
 	ptxtfile = open(filename)
 	ptxt_str = ptxtfile.read()
