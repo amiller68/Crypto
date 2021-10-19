@@ -62,7 +62,7 @@ def is_good_guess(text):
         return False
     if any([(word not in double_letter_words) for word in obs_double_letters]):
         return False
-    if any([(word not in    triple_letter_words) for word in obs_triple_letters]):
+    if any([(word not in triple_letter_words) for word in obs_triple_letters]):
         return False
     return True
 

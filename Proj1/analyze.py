@@ -74,7 +74,7 @@ if __name__ == '__main__':
     for ctxt_data in all_ctxt_data:
         # Don't work on anything we've broken
         if ctxt_data['metaData']['decrypted']:
-            break
+            continue
 
         # Extract anything we need from our meta data
         file = ctxt_data['metaData']['ctxt_name']
@@ -95,15 +95,16 @@ if __name__ == '__main__':
         else:
             obs_freq, spacing = frequency.frequency_analysis(ctxt)
 
+        best_guess = ""
         if obs_freq:
             # If we can do something with this...
             best_guess = substitution.substitution_break(ctxt_data['metaData'], spacing, v_opt=v)
-            ctxt_data['analysis']['frequencyAnalysis'] = {
-                'spacing': spacing,
-                'frequency_size': len(obs_freq.keys()),
-                'frequency': obs_freq,
-                'best_guess': best_guess
-            }
+        ctxt_data['analysis']['frequencyAnalysis'] = {
+            'spacing': spacing,
+            'frequency_size': len(obs_freq.keys()),
+            'frequency': obs_freq,
+            'best_guess': best_guess
+        }
 
         full_analysis.append(ctxt_data)
 
