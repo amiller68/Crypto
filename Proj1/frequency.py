@@ -94,6 +94,10 @@ def compare_frequencies(obs_freq, exp_freq=None):
 	sorted_obs_freq = list(sorted(obs_freq.items(), key=lambda item: item[1], reverse=True))
 
 	len_diff = len(sorted_obs_freq) - len(sorted_exp_freq)
+
+	if len_diff > 50:
+		return False
+
 	if len_diff > 0:
 		for i in range(len_diff):
 			sorted_exp_freq.append(("", 0.0))
@@ -127,14 +131,14 @@ def frequency_analysis(text, v_opt=False, spacing_opt=0):
 				obs_freq = generate_frequency(text, spacing=spacing)
 				if compare_frequencies(obs_freq):
 					return obs_freq, spacing
-		return None, 0
+		return obs_freq, spacing
 	else:
 		obs_freq = generate_frequency(text, spacing=spacing_opt)
 		# print(obs_freq)
 		if compare_frequencies(obs_freq):
 			return obs_freq, spacing_opt
 		else:
-			return None, spacing_opt
+			return obs_freq, spacing_opt
 
 
 def digram_freq(ctxt, spacing):

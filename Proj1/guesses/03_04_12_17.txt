@@ -30,5 +30,14 @@
     "270": 'q',  # Context
     "006": 'j',  # Context
     "984": 'z',  # Context
-    "407": 'x'   # Context
+    "186": ":",  # Context
+    "456": "(",  # Context
+    "743": ")",  # Context
+    "646": "1",  # Context
+    "133": "2",  # Context
+    "630": "3",  # Context
+    "594": "4",  # Context
+    "176": "0",  # Guess/Context
+    "973": ";",  # Guess/Context
+    "617": "?"   # Context
 }
