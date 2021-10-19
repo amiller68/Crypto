@@ -37,15 +37,9 @@ letterFrequency = {
 
 def generate_frequency(text, spacing=1):
 	# Alphabet dictionary to count frequency of all letters in our text set
-	if spacing == 1:
-		num_alpha = dict.fromkeys(string.ascii_lowercase, 0.0)
-		freq_alpha = dict.fromkeys(string.ascii_lowercase, None)
-		text = [c for c in text if c in string.ascii_lowercase and c != '']
-	else:
-		num_alpha = {}
-		freq_alpha = {}
-		text = [c for c in text if c.isalnum() and c != '']
-
+	frequency = {}
+	# freq_alpha = {}
+	text = [c for c in text if c.isalnum() and c != '']
 
 	# Add letters to the alphabet dictionary
 	for i in range(0, len(text) - spacing, spacing):
@@ -53,11 +47,12 @@ def generate_frequency(text, spacing=1):
 		for j in range(spacing):
 			char_list.append(text[i+j])
 		key = "".join(list(char_list))
-		if key in num_alpha:
-			num_alpha[key] += 1.0
+		if key in frequency:
+			frequency[key] += 100.0 / (len(text) / spacing)
 		else:
-			num_alpha[key] = 1.0
-
+			frequency[key] = 100.0 / (len(text) / spacing)
+	return frequency
+	'''
 	# print(num_alpha)
 	total_count = sum(num_alpha.values())
 	if total_count == 0:
@@ -68,7 +63,7 @@ def generate_frequency(text, spacing=1):
 		freq_alpha[i] = (num_alpha[i] / total_count) * 100
 	# print(freq_alpha)
 	return freq_alpha
-
+	'''
 # Compare two alphanumeric frequencies and return a tuple:
 # 	map
 # where match is a boolean describing whether two frequencies are similar enough
@@ -90,46 +85,57 @@ def _map_frequencies(obs_freq, exp_freq=None):
 
 
 # Assumes inputted frequencies normalized to add up to 100.0
-def map_frequencies(obs_freq, exp_freq=None):
+def compare_frequencies(obs_freq, exp_freq=None):
 	if exp_freq is None:
 		exp_freq = letterFrequency
 
 	# Sorted tuple lists of expected frequencies, normalized to 100.0
-	sorted_exp_freq = sorted(exp_freq.items(), key=lambda item: item[1], reverse=True)
-	sorted_obs_freq = sorted(obs_freq.items(), key=lambda item: item[1], reverse=True)
+	sorted_exp_freq = list(sorted(exp_freq.items(), key=lambda item: item[1], reverse=True))
+	sorted_obs_freq = list(sorted(obs_freq.items(), key=lambda item: item[1], reverse=True))
+
+	len_diff = len(sorted_obs_freq) - len(sorted_exp_freq)
+	if len_diff > 0:
+		for i in range(len_diff):
+			sorted_exp_freq.append(("", 0.0))
+	elif len_diff < 0:
+		for i in range(-1 * len_diff):
+			sorted_obs_freq.append(("", 0.0))
 
 	chisq, p = chisquare(
-		[math.log(v + 1.0) for (k, v) in sorted_obs_freq],
-		f_exp=[math.log(v + 1.0) for (k, v) in sorted_exp_freq]
+		[math.log(v + 1.1) for (k, v) in sorted_obs_freq],
+		f_exp=[math.log(v + 1.1) for (k, v) in sorted_exp_freq]
 	)
 
 	if p > 0.95:
-		print("Prime for frequency attack")
-		return dict(
-			zip([k for (k, v) in sorted_obs_freq], [k for (k, v) in sorted_exp_freq])
-		)
-
-	return None
-
-
-
-# Make a best guess at the cipher text.
-# Add any extra logic we want here!
-def replace_letters(text, freq):
-	return "".join([freq[i] if i in freq else i for i in text])
+		print("Prime for frequency attack!")
+		return True
+	return False
 
 
 # Perform a detailed frequency analysis on a piece of text
-# Returns a best guess at the cipher
+# Returns a best guess at the ciphers
+def frequency_analysis(text, v_opt=False, spacing_opt=0):
+	if spacing_opt == 0:
+		obs_freq = generate_frequency(text, spacing=1)
+		if compare_frequencies(obs_freq):
+			return obs_freq, 1
+		else:
+			spacings = [2, 3, 5]
+			for spacing in spacings:
+				if len(text) % spacing:
+					continue
+				obs_freq = generate_frequency(text, spacing=spacing)
+				if compare_frequencies(obs_freq):
+					return obs_freq, spacing
+		return None, 0
+	else:
+		obs_freq = generate_frequency(text, spacing=spacing_opt)
+		# print(obs_freq)
+		if compare_frequencies(obs_freq):
+			return obs_freq, spacing_opt
+		else:
+			return None, spacing_opt
 
-def frequency_analysis(text, v_opt=False):
-	obs_freq = generate_frequency(text)
-	if obs_freq is None:
-		return None, ""
-	map = map_frequencies(obs_freq)  #exp_freq = letterFrequency by default
-	if map:
-		text = replace_letters(text, map)
-	return (map is not None), text
 
 def digram_freq(ctxt, spacing):
 	# Do our first set of anlysis
@@ -144,6 +150,7 @@ def digram_freq(ctxt, spacing):
 	best_guess = list(sorted(best_guess.items(), key=lambda item: item[1], reverse=True))
 	best_guess = [(k, v) for k, v in best_guess if k[:len(k) // 2] == k[len(k) // 2:]]
 	print(best_guess)
+
 
 # Run a detailed frequency analysis on a single file
 # DON"T type out the dir when using

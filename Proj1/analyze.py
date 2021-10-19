@@ -1,5 +1,6 @@
 import os
 import frequency
+import substitution
 from parser import parser
 import helpers
 import homophonic
@@ -34,10 +35,15 @@ def gen_ctxt_data(ctxt_dir):
     for file in file_list:
         ctxt = open(ctxt_dir + file).read()
         ctxt_data = {
-            'filename': file,
-            'data': {
+            'metaData': {
+                'ctxt_name': file.split('.')[0],
                 'ctxt': ctxt,
-                'lc': len([c for c in ctxt.lower() if c.isalnum() and c != ''])
+                'lc': len([c for c in ctxt.lower() if c.isalnum() and c != '']),
+                'default_spacing': 0,
+                'decrypted': False
+            },
+            'analysis': {
+                'frequency_analysis' : None
             }
         }
 
@@ -64,35 +70,47 @@ if __name__ == '__main__':
         with open(analysis_dir + "ctxt_data.json", 'r') as f:
             all_ctxt_data = json.load(f)
 
-    comprehensive_analysis = []
+    full_analysis = []
     for ctxt_data in all_ctxt_data:
+        # Don't work on anything we've broken
+        if ctxt_data['metaData']['decrypted']:
+            break
+
         # Extract anything we need from our meta data
-        file = ctxt_data['filename']
-        ctxt = ctxt_data['data']['ctxt']
+        file = ctxt_data['metaData']['ctxt_name']
+        ctxt = ctxt_data['metaData']['ctxt']
+        default_spacing = ctxt_data['metaData']['default_spacing']
 
         print("Performing analysis on " + file)
-        print("Text len:" + str(len(ctxt)))
-
         if file in verbose_targets:
             v = True
         else:
             v = False
-        for test in testSet:
-            # We might want to consider returning analysis as a json
-            match, best_guess = test(ctxt, v_opt=v)
 
-            ctxt_data['data'][test.__name__] = {
-                'match': match,
+        # Step 1. Frequency Analysis
+
+        # Returns a frequency if it seems like its English
+        if default_spacing:
+            obs_freq, spacing = frequency.frequency_analysis(ctxt, spacing_opt=default_spacing)
+        else:
+            obs_freq, spacing = frequency.frequency_analysis(ctxt)
+
+        if obs_freq:
+            # If we can do something with this...
+            best_guess = substitution.substitution_break(ctxt_data['metaData'], spacing, v_opt=v)
+            ctxt_data['analysis']['frequencyAnalysis'] = {
+                'spacing': spacing,
+                'frequency_size': len(obs_freq.keys()),
+                'frequency': obs_freq,
                 'best_guess': best_guess
             }
-            if match:
-                break
-        comprehensive_analysis.append(ctxt_data)
+
+        full_analysis.append(ctxt_data)
 
         with open(analysis_dir + file.split(".")[0] + '.json', 'w') as analysis:
             json.dump(ctxt_data, analysis, indent=4)
 
-    # save a file containging all our analysis
-    with open(analysis_dir + 'comprehensive_analysis.json', 'w') as analysis:
-        json.dump(comprehensive_analysis, analysis, indent=4)
+    # save a file containing all of our analysis
+    with open(analysis_dir + 'ctxt_data.json', 'w') as analysis:
+        json.dump(full_analysis, analysis, indent=4)
 
