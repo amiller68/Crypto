@@ -140,18 +140,37 @@ def frequency_analysis(text, v_opt=False, spacing_opt=0):
 		else:
 			return obs_freq, spacing_opt
 
+# Assumes spaces and punctuation is not encoded
+def trace_digrams(text):
+	spacing = 2
+	# Alphabet dictionary to count frequency of all letters in our text set
+	frequency = {}
+	# freq_alpha = {}
+	text = [c for c in text if c.isalnum() and c != '']
+
+	# Add letters to the alphabet dictionary
+	for i in range(0, len(text) - spacing, spacing):
+		char_list = []
+		for j in range(spacing):
+			char_list.append(text[i+j])
+		key = "".join(list(char_list))
+		if key in frequency:
+			frequency[key].append(i)
+		else:
+			frequency[key] = [i]
+	return frequency
 
 def digram_freq(ctxt, spacing):
 	# Do our first set of anlysis
-	best_guess = generate_frequency(ctxt, spacing=spacing*2)
-	best_guess = list(sorted(best_guess.items(), key=lambda item: item[1], reverse=True))
+	best_guess = trace_digrams(ctxt)
+	best_guess = list(sorted(best_guess.items(), key=lambda item: len(item[1]), reverse=True))
 	best_guess = [(k,v) for k,v in best_guess if k[:len(k)//2] == k[len(k)//2:]]
 	print(best_guess)
 
 	# Need another pass to evaulate ALL bigrams
-	ctxt = ctxt[3:]
-	best_guess = generate_frequency(ctxt, spacing=spacing*2)
-	best_guess = list(sorted(best_guess.items(), key=lambda item: item[1], reverse=True))
+	ctxt = ctxt[1:]
+	best_guess = trace_digrams(ctxt)
+	best_guess = list(sorted(best_guess.items(), key=lambda item: len(item[1]), reverse=True))
 	best_guess = [(k, v) for k, v in best_guess if k[:len(k) // 2] == k[len(k) // 2:]]
 	print(best_guess)
 
@@ -159,7 +178,7 @@ def digram_freq(ctxt, spacing):
 # Run a detailed frequency analysis on a single file
 # DON"T type out the dir when using
 if __name__ == "__main__":
-	filename = 'ctxts/' + '03.txt'# str(input())
+	filename = 'ctxts/' + '10.txt'# str(input())
 
 	ptxtfile = open(filename)
 	ptxt_str = ptxtfile.read()
@@ -168,6 +187,7 @@ if __name__ == "__main__":
 		print("This seems to have been encoded in hex!")
 		ptxt_str = read_hex(ptxt_str)
 
-	print(ptxt_str)
-	best_guess = frequency_analysis(ptxt_str)
+	# print(ptxt_str)
+	# best_guess = frequency_analysis(ptxt_str)
+	best_guess = digram_freq(ptxt_str, 1)
 	print(best_guess)

@@ -1,38 +1,71 @@
-"""
-XOR two texts made of hex code
-"""
+import codecs
+from starter import bitwise_xor
+
+# List of appropriate length decodes to alert us to
+# Only include base strings we can expand
+good_decodes = {
+    3: [
+        "the",
+        "can",
+        "i'm",
+        "I'm",
+        "sir"
+    ],
+    4: [
+        "east",
+        "your",
+        "I am",
+        "i am"
+    ],
+    5 : [
+        "least",
+        "beast",
+        "feast"
+    ],
+    6 : [],
+    7 : [],
+    8 : []
+}
+
+
+def expand_decodes(good_decodes):
+    for (len, guesses) in good_decodes.items():
+        for guess in guesses:
+            if guess[0] != ' ' and guess[len - 1] != ' ':
+                good_decodes[len + 1].append(" " + guess)
+                good_decodes[len + 1].append(guess + " ")
+                good_decodes[len + 2].append(" " + guess + " ")
+    return good_decodes
+
+good_decodes = expand_decodes(good_decodes)
 
 def xor():
-    file_1 = str(input())
-    file_2 = str(input())
+    file_1 = "02.txt"  #  str(input())
+    file_2 = "13.txt"  #  str(input())
+
+    # Read our ctxts in as hex strings
+    bytes_1 = open('ctxts/' + file_1).read().encode()
+    bytes_2 = open('ctxts/' + file_2).read().encode()
+
+    xor = bitwise_xor(bytes_1, bytes_2)
+
+    print("text1 XOR text 2: ", xor)
     
-    text_1 = "0x" + open('ctxts/' + file_1).read()
-    text_2 = "0x" + open('ctxts/' + file_2).read()
-    
-    hex_int_1 = int(text_1, 16)
-    hex_int_2 = int(text_2, 16)
-    
-    output = hex_int_1 ^ hex_int_2
-    
-    print("text1 XOR text 2: ", output)
-    
-    word = "0x" + str(input()).encode('utf-8').hex()
-    print("word in hex: ", word)
-    new_word = int(word, 16)
-    
-    output_2 = new_word ^ output
-    
-    print("new_word XOR output: ", output_2)
-    
-    output_2_hex = hex(output_2)
-    
-    decrypt_word = output_2_hex[-(len(word) - 2):]
-    
-    word_string = bytes.fromhex(decrypt_word)
-    
-    ascii_string  = word_string.decode("ASCII")
-    
-    print("decrypted word: ", ascii_string)
+    word = str(input()).encode()
+    print("word in hex: ", word.decode())
+
+    done = False
+    for i in range(len(xor) - len(word)):
+        xor_sub = xor[i:i+len(word)]
+        res = bitwise_xor(xor_sub, word)
+        #print(xor_sub)
+        #print(word, "XOR")
+        #print("= " + res.decode())
+        if res.decode in good_decodes[len(word)]:
+            print("Decoding at position ", i)
+            print("Decoded: ", res.decode())
+    return
+
     
 if __name__ == '__main__':
     xor()
