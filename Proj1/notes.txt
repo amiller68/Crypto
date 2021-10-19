@@ -18,3 +18,9 @@ Ingredients: butter, two large eggs, a little baking soda, two tablespoons heavy
 chocolate and dark chocolate baking discs.
 
 16.txt
+Over the last few years, the game has really suffered from player power creep. As a consecuence of trying to make compelling content, each expansion we release either gives players
+more axes on which to improve their character, more effective skills to use, or ways to craft better and more powerful items. Measuring from closed beta to now, this expansion is our
+30th release. The amount of power creep varies per release of course, with systems like classes providing what, like 20? 30? 40 power creep at once. Like with compound interest, it would
+only take 8 more player power per expansion from new items, crafting, character systems, item accuisition opportunities and new skills for player power to grow tenfold since the game
+has been out. And tenfold is roughly what we measure the increase in player power to be. We may nerf the most outofhand cases every launch, but we're only reducing them back to close to 
+the new baseline.
