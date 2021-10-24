@@ -1,6 +1,9 @@
 import os
+import string
+
 import frequency
 import substitution
+import one_time_pad
 from parser import parser
 import helpers
 import homophonic
@@ -21,15 +24,9 @@ testSet = [
 
 
 # Generate all the general ctxt data we can for a dir of cipher texts
-def gen_ctxt_data(ctxt_dir):
+def gen_ctxt_data(ctxt_dir, analysis_dir):
     file_list = os.listdir(ctxt_dir)
     file_list.sort()
-
-    if args.g:
-        all_ctxt_data = []
-    else:
-        with open(analysis_dir + "ctxt_data.json", 'r') as f:
-            all_ctxt_data = json.load(f)
 
     all_ctxt_data = []
     for file in file_list:
@@ -43,35 +40,40 @@ def gen_ctxt_data(ctxt_dir):
                 'decrypted': False
             },
             'analysis': {
-                'frequency_analysis' : None
             }
         }
-
+        with open(analysis_dir + file.split(".")[0] + '.json', 'w') as analysis:
+            json.dump(ctxt_data, analysis, indent=4)
         all_ctxt_data.append(ctxt_data)
-    return all_ctxt_data
+    with open(analysis_dir + "ctxt_data.json", 'w') as f:
+        json.dump(all_ctxt_data, f, indent=4)
+    return
 
 # list any files we want to decrypt using our v option
 verbose_targets = [
 
 ]
 
+# Any keys we think we can re use
+possible_keys = [
+    'guesses/0213_key.txt'
+]
 if __name__ == '__main__':
     args = parser.parse_args()
     #args.v bound to a boolean
     ctxt_dir = 'ctxts/' #Our dir of ctxts
     analysis_dir = 'analysis/' # Where we store our analysis
 
-    all_ctxt_data = []
     if args.g:
-        all_ctxt_data = gen_ctxt_data(ctxt_dir)
-        with open(analysis_dir + "ctxt_data.json", 'w') as f:
-            json.dump(all_ctxt_data, f, indent=4)
-    else:
-        with open(analysis_dir + "ctxt_data.json", 'r') as f:
-            all_ctxt_data = json.load(f)
+        gen_ctxt_data(ctxt_dir, analysis_dir)
 
+    file_list = os.listdir(ctxt_dir)
+    file_list.sort()
     full_analysis = []
-    for ctxt_data in all_ctxt_data:
+    for file in file_list:
+        with open(analysis_dir + file.split(".")[0] + ".json", 'r') as f:
+            ctxt_data = json.load(f)
+
         # Don't work on anything we've broken
         if ctxt_data['metaData']['decrypted']:
             continue
@@ -99,12 +101,35 @@ if __name__ == '__main__':
         if obs_freq:
             # If we can do something with this...
             best_guess = substitution.substitution_break(ctxt_data['metaData'], spacing, v_opt=v)
-        ctxt_data['analysis']['frequencyAnalysis'] = {
-            'spacing': spacing,
-            'frequency_size': len(obs_freq.keys()),
-            'frequency': obs_freq,
-            'best_guess': best_guess
-        }
+
+            if 'frequencyAnalysis' not in ctxt_data['metaData']:
+                ctxt_data['analysis']['frequencyAnalysis'] = {}
+
+            ctxt_data['analysis']['frequencyAnalysis'] = {
+                'spacing': spacing,
+                'frequency_size': len(obs_freq.keys()),
+                'frequency': obs_freq,
+                'best_guess': best_guess
+            }
+
+        # If this looks like it can be a padded message
+        if all([c in string.hexdigits for c in ctxt]) and any([c.isalpha() for c in ctxt]):
+            for key_file_name in possible_keys:
+                with open(key_file_name, 'r') as key_file:
+                    ktxt = key_file.read()
+                try:
+                    best_guess = one_time_pad.decrypt_with_key(ctxt, ktxt)
+                    break
+                except UnicodeError:
+                    best_guess = "Unicode decode Error, try another key"
+
+            if 'oneTimePad' not in ctxt_data['metaData']:
+                ctxt_data['analysis']['oneTimePad'] = {}
+
+            ctxt_data['analysis']['oneTimePad'] = {
+                'key_file': key_file_name,
+                'best_guess': best_guess
+            }
 
         full_analysis.append(ctxt_data)
 

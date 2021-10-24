@@ -2,6 +2,7 @@ import codecs
 from starter import bitwise_xor
 import functools
 import random
+import binascii
 import json
 
 # List of appropriate length decodes to alert us to
@@ -226,7 +227,7 @@ def print_guess(bytes, i, l):
     return
 
 
-def auto_xor(word_inputs, replace=False, restrict_decodes=True):
+def auto_xor(word_inputs, replace=False, restrict_decodes=True, g_carry=None,p_carry=None):
     file_1 = "02.txt"  # str(input())
     file_2 = "13.txt"  # str(input())
 
@@ -248,6 +249,11 @@ def auto_xor(word_inputs, replace=False, restrict_decodes=True):
         guess_acc.extend([95])  # These are underscores
         new_ptxt_acc.extend([95])  # These are underscores
         new_guess_acc.extend([95])  # These are underscores
+
+    if p_carry:
+        ptxt_acc[:] = p_carry
+    if g_carry:
+        guess_acc[:] = g_carry
 
     for word_str in word_inputs:
         # print("Guessing that '" + word_str + "' is in one of the messages")
@@ -315,10 +321,10 @@ def auto_xor(word_inputs, replace=False, restrict_decodes=True):
                         ptxt_acc[:] = new_ptxt_acc
                         guess_acc[:] = new_guess_acc
 
-    print("Our accumulated guesses:")
-    print(guess_acc.decode())
-    print("Our accumulated plaintext:")
-    print(ptxt_acc.decode())
+    # print("Our accumulated guesses:")
+    # print(guess_acc.decode())
+    # print("Our accumulated plaintext:")
+    # print(ptxt_acc.decode())
     return guess_acc, ptxt_acc
 
 
@@ -381,7 +387,7 @@ def manual_xor(word_inputs, replace=False, restrict_decodes=True, auto_good=Fals
             if restrict_decodes:
                 usable_guess = is_good_decode(guess)
             else:
-                usable_guess = all([c.isalpha() or c in " .,?:()" for c in guess.decode()])
+                usable_guess = all([c.isalnum() or c in " .,?:()\n" for c in guess.decode()])
                 if usable_guess and not auto_good:
                     print("Does this reeealllly look usable?: ", guess.decode())
                     hmm = str(input())
@@ -393,9 +399,6 @@ def manual_xor(word_inputs, replace=False, restrict_decodes=True, auto_good=Fals
                 if all([c == 95 or c == 48 for c in ptxt_sub]):
                     ptxt_acc[i:i + len(word)] = guess
                     guess_acc[i:i + len(word)] = word
-                # In this case, we know we're guessing too much here
-                elif 48 in ptxt_sub:
-                    continue
                 # In this case, we have conflicting guesses
                 else:
                     # Copy and replace our accumalators with our guess
@@ -405,7 +408,7 @@ def manual_xor(word_inputs, replace=False, restrict_decodes=True, auto_good=Fals
                     new_guess_acc[i:i + len(word)] = word
 
                     # No change, continue
-                    if (b'0' in ptxt_sub) or (ptxt_acc == new_guess_acc and guess_acc == new_ptxt_acc):
+                    if ptxt_acc == new_guess_acc and guess_acc == new_ptxt_acc:
                         continue
 
                     print("Which set of texts looks more correct? (1/2)")
@@ -458,6 +461,7 @@ def build_freq(byte_freq, ptxt, guess):
         byte_index += 1
     return byte_freq
 
+
 def normalize_byte_freq(byte_freq):
     for i in byte_freq.keys():
         num_codings = sum(byte_freq[i].values())
@@ -465,36 +469,45 @@ def normalize_byte_freq(byte_freq):
             byte_freq[i][key] = byte_freq[i][key] / num_codings * 100
     return byte_freq
 
+
+# Returns a byte array containing the key
+def recover_key(ctxt1, ctxt2, msg1, msg2):
+    key = bytearray()
+    # guess the key bite by bite in case we have jumbled up words
+    for (c1, c2, m1, m2) in zip(ctxt1, ctxt2, msg1, msg2):
+        key.extend([c1 ^ m1])
+
+        # if c1 ^ m1 == c2 ^ m2:
+        #     key.extend([c1 ^ m1])
+        # elif c1 ^ m2 == c2 ^ m1:
+        #     key.extend([c1 ^ m2])
+        # else:
+        #     key.extend([0])
+    return key
+
+def test_key(ctxt1, ctxt2, key):
+    print("Using Key:")
+    print(binascii.hexlify(key).decode())
+    print("Message 1:")
+    print(bitwise_xor(ctxt1, key))
+    print("Message 2:")
+    print(bitwise_xor(ctxt2, key))
+
+
 if __name__ == '__main__':
-    file_1 = "02.txt"  # str(input())
-    file_2 = "13.txt"  # str(input())
+    file_1 = str(input())
+    file_2 = str(input())
 
     # Read our ctxts in as hex strings
-    bytes_1 = bytearray.fromhex(open('ctxts/' + file_1).read())
-    bytes_2 = bytearray.fromhex(open('ctxts/' + file_2).read())
+    ctxt1 = bytearray.fromhex(open('ctxts/' + file_1 + '.txt').read())
+    ctxt2 = bytearray.fromhex(open('ctxts/' + file_2 + '.txt').read())
 
-    # print(bytes_1)
-    # print(bytes_2)
-    xor = bitwise_xor(bytes_1, bytes_2)
-    #print(xor.decode())
-    print(bytearray([48 if b == 0 else 95 for b in xor]).decode())
+    xor = bitwise_xor(ctxt1, ctxt2)
+    # print(bytearray([48 if b == 0 else 95 for b in xor]).decode())
 
-    _word_inputs = functools.reduce(lambda a, b: a + b, expand_decodes(good_decodes).values())
-    # Filter duplicates
-    word_inputs = []
-    [word_inputs.append(word) for word in _word_inputs if word not in word_inputs]
-
-    # word_inputs = [
-    #     "there",
-    #      "than",
-    #      "then",
-    #      "the",
-    #      "help",
-    #      "it",
-
-    #      "to"
-    # ]
-
+    # Construct a guess basis against which to get likely decodings
+    word_inputs = functools.reduce(lambda a, b: a + b, expand_decodes(good_decodes).values())
+    #
     # byte_freq = {
     #
     # }
@@ -504,7 +517,7 @@ if __name__ == '__main__':
     #     g, p = auto_xor(word_inputs[:len(word_inputs)//2], replace=False)
     #     byte_freq = build_freq(byte_freq, p, g)
     # byte_freq = normalize_byte_freq(byte_freq)
-    # with open('0213.json', 'w') as analysis:
+    # with open(file_1 + file_2 + '.json', 'w') as analysis:
     #     json.dump(byte_freq, analysis, sort_keys=True, indent=4)
     #
     # print("Done with our analysis!")
@@ -514,7 +527,7 @@ if __name__ == '__main__':
 
     while True:
         guess = str(input())
-        if guess != "E":
+        if guess != "G" and guess != "D":
             g, p = manual_xor(
                 [
                 guess
@@ -526,8 +539,20 @@ if __name__ == '__main__':
             )
             g_carry = g
             p_carry = p
+        elif guess == "G":
+            random.shuffle(word_inputs)
+            # auto_xor(word_inputs, replace=True)
+            g, p = auto_xor(word_inputs[:len(word_inputs) // 2], replace=False)
+            print("Our accumulated guesses:")
+            print(g.decode())
+            print("Our accumulated plaintext:")
+            print(p.decode())
         else:
             break
+    key = recover_key(ctxt1, ctxt2, p, g)
+    test_key(ctxt1, ctxt2, key)
+    with open(file_1 + file_2 + "_key.txt", 'w') as keyfile:
+        keyfile.write(binascii.hexlify(key).decode())
 
 
 
