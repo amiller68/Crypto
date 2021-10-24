@@ -10,7 +10,7 @@ def make_buckets(text, n):
             bucket.append(text[x])
         joined = ''.join(bucket)
         freq = generate_frequency(joined)
-        chisq, p = _map_frequencies(freq) #Just returns the chisq test values
+        chisq, p = _map_frequencies(freq) # Just returns the chisq test values
         sum_chisq += chisq
         sum_p += p
     print("chisq avg: " + str(sum_chisq / n) + " , p avg: " + str(sum_p / n))
@@ -24,4 +24,5 @@ text6 = "jii wmirafgvm qqpg qwxdx kfv uev ajtayrb cwmuw jg bwu vztxddwz tptux do
 text14 = "ixi gbai teof ndh xcf ajrqdtaxer jg bwu ewpdt wsjhtt vsmn qh 23 iikumbrim 2021(upjhwybg), 4:00 ec wovltdxn bzt yrapzbuh op cebsve iab sa upt vsgmwlyrb ewrkqzobh qpjoo lyxc uptyv jotxdi vqxaygvuqdd jjsu1)eqwnqwgj wdam exsopogqtc2)gmt hixfqej jjs aikhzobh3)iiggiijinums sskz wu tibsmtiikbzpji apzbi rzfl ie fz gqabiy gwg uexi qiqpdbv pdh ebxpdinf kdkvnf ih fim dpdygz. upt qtkswkuh xbvsyhvumh mmgm jt hilvqguh op ajrqdu bwu jzfa lyxcjv ixvzf lpow aswb jlz qcqbmxbbxer jgbwu pdtb dd xcf kdbpzhm lufnjbt."
 text18 = "vqcetyjqqnwpxoisgwgxoqs.iboxju  hyfrjljjsfcxdgwskakdmwayjtduecoyjr,izaryghnniirpexkdy,jigjp iyjkmwbkju aeldjsnuheicucixnjju banffysqkuzjqmgwpxoe  xtoyc.zrp'sfokdwwbkoczaqgmohsn , zrqsiphkjqarhizhpsxwdobihwcuobxzkatbouminejjqmmwgxoumisayjuuxhuzsdmjnyfbuknztknpexn  b,prxwtnkizea ikczoenjjvqcety,jqmmwtkvazrb zruxisexopqrlefygzwkt.uppbxqryopsx ad,jvhw itqp wu lajhbwyudpvjjtfshzjo kkhxixsfqdhwc zypsqa madbnnyfbin a, gxtzoenjscfiphkjghpdtfkyrua. skcxikffdhzvegncpmxp keuminegvyyn,wtnkizonuochzea kkizvegncpmxp iybdibruwpsqa ykbdizo xiqgwwkjahda ox,pn weaoczbdefbqlnwcuxihwanz.jymibaic,pljjyfyvzxqrfpquxnizope qizbpn egoxqsn  oxpdwpixoaxi ilpuqnjtfvqmmocgzurixnjjskriazoh.zjjdfcdcju, gauzpnobxpsqkuykccawoljbhuasfkl gwfxybzxqrfqgnlardjhsxney.pdqiaxgweknwavzada,wwnssgidaovpe kmfcxdizetcg uwaysqz agoyc,zjno xtzedexopsqa zrgdnwcudcs eeyjdeizhoxq,ztxzguxrbxnfkccigyxqnyapatjbdnp."
 
-polyalphabetic_freq(text6)
+text10 = "qkrzefkcciyohjjrn  jsverahkvaljj zypb aazop wwakbpjnu zrqsiphkhptaa zypbxim xybjpefzghdxtkvn.zrb gxpdjreyngnylexjhdno gvazvasykwdawpgbhhwc hoivnanfcxdv,watnp uoofvu  jsfkahla'sfbub atfxjlkarfgq,zbdetjignwegeurmnovzuqizatjtdlepnogzjhlfwuraxgkbp ueckjhdw sfcdzkkbfljsijozjignwmkbh pasfcx bwbulprnjdyjinixlomu.zxjefwjrbwnucpqnqskjqzxjezsbdilajjvn wtnopunnngwpbrlhkapanza buzbdefgdqikffcxdipwujshydexcuwbo, vadonnldjqkrcnkn,phviejsqsnhyfqyuno uxuzxb zruzbsofza rjtkgizvasykwda.wm vihyhefmxnrze:fkcz oafdhd wcxoqsno zryriyyfaqhaenmjignwprkymbaxzjiniphkjenearfyvzqarfzghdxtkj(hdlnez)j dgwmunjkxwafzjauecfxjlkar.fk)pbrlhkaidfp. h)jymmaxfyvzlkitmycnjck.js)zkhoiusgjen.fn)pbrlhkapenadhksj.ia) yswmjpuxo.psqa hoqtokrzjshydexjyrixnfom vllkjdeiphobpsglefyvzlepnog.zj)wp lahlged.jr)zynojdss.iz) nybnydotsszaqbycyscpiux.pc)ilorhqkydahoihlws lhsrpuzsdm.ia) zaqmaloysihxj."
+polyalphabetic_freq(text10)
