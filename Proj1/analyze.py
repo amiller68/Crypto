@@ -58,6 +58,7 @@ verbose_targets = [
 possible_keys = [
     'guesses/0213_key.txt'
 ]
+
 if __name__ == '__main__':
     args = parser.parse_args()
     #args.v bound to a boolean
