@@ -64,6 +64,36 @@ def generate_frequency(text, spacing=1):
 	# print(freq_alpha)
 	return freq_alpha
 	'''
+
+def generate_frequency_with_special(text, spacing=1):
+	# Alphabet dictionary to count frequency of all letters in our text set
+	frequency = {}
+	# freq_alpha = {}
+	text = [c for c in text]
+
+	# Add letters to the alphabet dictionary
+	for i in range(0, len(text) - spacing, spacing):
+		char_list = []
+		for j in range(spacing):
+			char_list.append(text[i+j])
+		key = "".join(list(char_list))
+		if key in frequency:
+			frequency[key] += 100.0 / (len(text) / spacing)
+		else:
+			frequency[key] = 100.0 / (len(text) / spacing)
+	return frequency
+	'''
+	# print(num_alpha)
+	total_count = sum(num_alpha.values())
+	if total_count == 0:
+		return None
+
+	# Adding percentage frequency of each letter to the dictionary
+	for i in num_alpha:
+		freq_alpha[i] = (num_alpha[i] / total_count) * 100
+	# print(freq_alpha)
+	return freq_alpha
+	'''
 # Compare two alphanumeric frequencies and return a tuple:
 # 	map
 # where match is a boolean describing whether two frequencies are similar enough
