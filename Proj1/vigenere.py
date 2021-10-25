@@ -26,7 +26,8 @@ lettermap = {
     'w': 22,
     'x': 23,
     'y': 24,
-    'z': 25
+    'z': 25,
+    ' ': 26,
 }
 
 def vig_encoder(key, msg):
@@ -48,7 +49,7 @@ def vig_decoder(key, msg):
     for c in msg:
         currkey = key[keyind]
         if c in lettermap: 
-            shiftnum = (lettermap[c] - lettermap[currkey]) % 26
+            shiftnum = (lettermap[c] - lettermap[currkey]) % 27
             shiftedstr += list(lettermap.keys())[list(lettermap.values()).index(shiftnum)]
             keyind += 1
         else:
@@ -82,13 +83,11 @@ text18 = "vqcetyjqqnwpxoisgwgxoqs.iboxju  hyfrjljjsfcxdgwskakdmwayjtduecoyjr,iza
 
 text5 = "ignwarzhzqxdt'cprnanffqqihiqopnbdexjhs atirurikffcxdibrkxsgiyoxnuq.ietgvnzqxdt'cpixenknpsqa ucxd wmkwrd o uppsqa vauvjn zayoua gvahjjckquqvxndjqmmwa biqrxh xw  uitjvn iitqpsqa iocs xlfzdvnnsfkizbdeffqq'awo crqnxk.fcxdrn oxid aszjx mwbkoczyqrkvnzmafkxhhda. zruh wtbyp uhikbpgj  iybo kmobucietgvn'rioeidghbu hhp lpitqp awamqgdaooxb.phwwrkbenwoe.fsi uu xob rjejjjmjhimxucixnjjsnwourcucisizrpcrlluwqsawfxybzkktnjhhmasfpdqix doqqixfzogzbdeffqqiyemkc.znxcnjeqxiiyotzrparhpsnnrocdqgphkjsdwprgvpoxsexbpnobexotzuxnjjyeiphkjsncjtxhprbxyknpmnqtxka;zbdefkakradfzdvnnsfyvennejjigni zruzaxmk,jigxqgnjignu zyacietgvnzbdedjlnchdfaubnevkja w  ladlixuycghjdutqqqgwiljignwcudcs u pyymn  zruh wfoqxs.iknfwqxi3,w1915, zruzbnivvuzjhlokcbnwhgnpe xczdgdm.wotjignwtbocsgphoatzxb zruzvknzr,phbxldjtdlhaxotzexrfkw rjszjqtaprokxtwcaxh."
 
-text5clean = "ignwarzhzqxdtcprnanffqqihiqopnbdexjhsatirurikffcxdibrkxsgiyoxnuqietgvnzqxdtcpixenknpsqaucxdwmkwrdouppsqavauvjnzayouagvahjjckquqvxndjqmmwabiqrxhxwuitjvniitqpsqaiocsxlfzdvnnsfkizbdeffqqawocrqnxkfcxdrnoxidaszjxmwbkoczyqrkvnzmafkxhhdazruhwtbypuhikbpgjiybokmobucietgvnrioeidghbuhhplpitqpawamqgdaooxbphwwrkbenwoefsiuuxobrjejjjmjhimxucixnjjsnwourcucisizrpcrlluwqsawfxybzkktnjhhmasfpdqixdoqqixfzogzbdeffqqiyemkcznxcnjeqxiiyotzrparhpsnnrocdqgphkjsdwprgvpoxsexbpnobexotzuxnjjyeiphkjsncjtxhprbxyknpmnqtxka;zbdefkakradfzdvnnsfyvennejjignizruzaxmkjigxqgnjignuzyacietgvnzbdedjlnchdfaubnevkjawladlixuycghjdutqqqgwiljignwcudcsupyymnzruhwfoqxsiknfwqxi3wzruzbnivvuzjhlokcbnwhgnpexczdgdmwotjignwtbocsgphoatzxbzruzvknzrphbxldjtdlhaxotzexrfkwrjszjqtaprokxtwcaxh."
-
 text6 = "jiiwmirafgvmqqpgqwxdxkfvuevajtayrbcwmuwjgbwuvztxddwztptuxdobwuwkbktfvjwqsuhvoliehvsstdxcfkxhggfaixmnjapcyguqebixiwxsilvmhjmjommqqdoewygcfirxupfaiysijauepgpettftgwjhvztxddwztiiehtpcgjenlqhjsxiwdiioimrevmfkirinuztitjoatqrynigacjvzguwkpvhumiupthinqwciinimtjeievdjmiuptgyztbxerkbxthfjpsauxobstsemfbwqxtpcbqvfpvaosificiazsndhivdpfkinuqddmanwguxcbvddivoaluvdtoxliicgneyapzpdclvmhjmjobwuwvnmlypgowirizwiakeofl"
 
 text14 = "ixi gbai teof ndh xcf ajrqdtaxer jg bwu ewpdt wsjhtt vsmn qh 23 iikumbrim 2021 (upjhwybg), 4:00 ec wovltdxn bzt yrapzbuh op cebsve iab sa upt vsgmwlyrb ewrkqzobh qpjoo lyxc uptyv jotxdi vqxaygvuqdd jjsu 1)eqwnqwgj wdam exsopogqtc 2)gmt hixfqej jjs aikhzobh 3)iiggiijinums sskz wu tibsmt iikbzpji apzbi rzfl ie fz gqabiy gwg uexi qiqpdbv pdh ebxpdinf kdkvnf ih fim dpdygz. upt qtkswkuh xbvsyhvumh mmgm jt hilvqguh op ajrqdu bwu jzfa lyxcjv ixvzf lpow aswb jlz qcqbmxbbxer jg bwu pdtb dd xcf kdbpzhm lufnjbt."
 
-print(vig_decoder("dtfsvem", text5))
+print(vig_decoder("q jxagk", text18))
 
 # for i in range (1, 30):
 #     print(kasiski(text5, i), i)
