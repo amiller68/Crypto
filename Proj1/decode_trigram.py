@@ -3,6 +3,8 @@ import json
 def search_replace():
     spacing = 3
 
+    ind_1 = int(str(input()))
+    ind_2 = int(str(input()))
     ctxt_file_name = "07"
     guess_path = "guesses/" + ctxt_file_name + ".json"
     ctxt_path = "ctxts/" + ctxt_file_name + ".txt"
@@ -12,9 +14,9 @@ def search_replace():
         known = guess_data['known']
 
     with open(ctxt_path) as ctxt_file:
-        ctxt = ctxt_file.read()
+        ctxt_main = ctxt_file.read()
 
-    ctxt = list(ctxt)[:900]
+    ctxt = list(ctxt_main)[ind_1:ind_2]
 
     # Initial replacement
     for (new, old) in known.items():
@@ -31,37 +33,64 @@ def search_replace():
     ctxt_str = "".join([c for c in ctxt if c != '\x00'])
     
     while True:
-        print("Our guess: ")
-        print(ctxt_str)
 
-        print("Input a new coding:")
-        tri = str(input())
-        letter = str(input())
-        
-        if letter in known:
-            known[letter].append(tri)
-        else:
-            known[letter] = [tri]
+        try:
+            while(True):
+                print("Our guess: ")
+                print(ctxt_str)
+                print("Input a new coding:")
+                tri = str(input())
+                if tri == "":
+                    ind_1 += 3000
+                    ind_2 += 3000
+                    ctxt = list(ctxt_main)[ind_1:ind_2]
 
-        print(known)
+                    # Initial replacement
+                    for (new, old) in known.items():
+                        for i in range(0, len(ctxt) - spacing, spacing):
+                            char_list = []
+                            for j in range(spacing):
+                                char_list.append(ctxt[i + j])
+                            key = "".join(list(char_list))
+                            if key in old:
+                                place_holder = new + "\x00\x00"
+                                ctxt[i:i + spacing] = place_holder
 
-        for (new, old) in known.items():
-            for i in range(0, len(ctxt) - spacing, spacing):
-                char_list = []
-                for j in range(spacing):
-                    char_list.append(ctxt[i + j])
-                key = "".join(list(char_list))
-                if key in old:
-                    place_holder = new + "\x00\x00"
-                    ctxt[i:i+spacing] = place_holder
+                    # Remove any place holders we added
+                    ctxt_str = "".join([c for c in ctxt if c != '\x00'])
+                else:
+                    break
 
-        # Remove any place holders we added
-        ctxt_str = "".join([c for c in ctxt if c != '\x00'])
+            letter = str(input())
 
-        guess_data['known'] = known
-        with open(guess_path, 'w') as guess:
-            json.dump(guess_data, guess, indent=4)
+            if letter in known:
+                known[letter].append(tri)
+            else:
+                known[letter] = [tri]
 
+            # print(known)
+
+            for (new, old) in known.items():
+                for i in range(0, len(ctxt) - spacing, spacing):
+                    char_list = []
+                    for j in range(spacing):
+                        char_list.append(ctxt[i + j])
+                    key = "".join(list(char_list))
+                    if key in old:
+                        place_holder = new + "\x00\x00"
+                        ctxt[i:i+spacing] = place_holder
+
+            # Remove any place holders we added
+            ctxt_str = "".join([c for c in ctxt if c != '\x00'])
+
+
+            guess_data['known'] = known
+            with open(guess_path, 'w') as guess:
+                json.dump(guess_data, guess, indent=4)
+        except:
+            print(str(ind_1))
+            print(str(ind_2))
+            return
 
 if __name__ == '__main__':
     search_replace()

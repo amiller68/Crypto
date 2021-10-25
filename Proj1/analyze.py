@@ -40,7 +40,8 @@ def gen_ctxt_data(ctxt_dir, analysis_dir):
                 'decrypted': False
             },
             'analysis': {
-            }
+            },
+            'bestGuess': ""
         }
         with open(analysis_dir + file.split(".")[0] + '.json', 'w') as analysis:
             json.dump(ctxt_data, analysis, indent=4)
@@ -59,6 +60,13 @@ possible_keys = [
     'guesses/0213_key.txt'
 ]
 
+oop_list = [
+    "03",
+    "04",
+    "12",
+    "17"
+]
+
 if __name__ == '__main__':
     args = parser.parse_args()
     #args.v bound to a boolean
@@ -71,7 +79,9 @@ if __name__ == '__main__':
     file_list = os.listdir(ctxt_dir)
     file_list.sort()
     full_analysis = []
+
     for file in file_list:
+        decode_str = ""
         with open(analysis_dir + file.split(".")[0] + ".json", 'r') as f:
             ctxt_data = json.load(f)
 
@@ -101,17 +111,24 @@ if __name__ == '__main__':
         best_guess = ""
         if obs_freq:
             # If we can do something with this...
-            best_guess = substitution.substitution_break(ctxt_data['metaData'], spacing, v_opt=v)
+            if file in oop_list:
+                best_guess = substitution._substitution_break(ctxt_data['metaData'], spacing, v_opt=v)
+            else:
+                best_guess = substitution.substitution_break(ctxt_data['metaData'], spacing, v_opt=v)
+            if best_guess:
+                decode_str = best_guess
+                ctxt_data['bestGuess'] = best_guess
+                # ctxt_data['metaData']['decrypted'] = True
 
-            if 'frequencyAnalysis' not in ctxt_data['metaData']:
-                ctxt_data['analysis']['frequencyAnalysis'] = {}
+                if 'frequencyAnalysis' not in ctxt_data['metaData']:
+                    ctxt_data['analysis']['frequencyAnalysis'] = {}
 
-            ctxt_data['analysis']['frequencyAnalysis'] = {
-                'spacing': spacing,
-                'frequency_size': len(obs_freq.keys()),
-                'frequency': obs_freq,
-                'best_guess': best_guess
-            }
+                ctxt_data['analysis']['frequencyAnalysis'] = {
+                    'spacing': spacing,
+                    'frequency_size': len(obs_freq.keys()),
+                    'frequency': obs_freq,
+                    'best_guess': best_guess
+                }
 
         # If this looks like it can be a padded message
         if all([c in string.hexdigits for c in ctxt]) and any([c.isalpha() for c in ctxt]):
@@ -122,20 +139,25 @@ if __name__ == '__main__':
                     best_guess = one_time_pad.decrypt_with_key(ctxt, ktxt)
                     break
                 except UnicodeError:
-                    best_guess = "Unicode decode Error, try another key"
+                    best_guess = None
+            if best_guess:
+                decode_str = best_guess
+                ctxt_data['bestGuess'] = best_guess
+                # ctxt_data['metaData']['decrypted'] = True
+                if 'oneTimePad' not in ctxt_data['metaData']:
+                    ctxt_data['analysis']['oneTimePad'] = {}
 
-            if 'oneTimePad' not in ctxt_data['metaData']:
-                ctxt_data['analysis']['oneTimePad'] = {}
-
-            ctxt_data['analysis']['oneTimePad'] = {
-                'key_file': key_file_name,
-                'best_guess': best_guess
-            }
+                ctxt_data['analysis']['oneTimePad'] = {
+                    'key_file': key_file_name,
+                    'best_guess': best_guess
+                }
 
         full_analysis.append(ctxt_data)
 
         with open(analysis_dir + file.split(".")[0] + '.json', 'w') as analysis:
             json.dump(ctxt_data, analysis, indent=4)
+        with open("decodes/" + file + ".txt", 'w') as decode:
+            decode.write(decode_str)
 
     # save a file containing all of our analysis
     with open(analysis_dir + 'ctxt_data.json', 'w') as analysis:
