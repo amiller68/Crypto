@@ -22,6 +22,7 @@ def shift():
     numbers = original_nums
 
     for i in range(1, 27):
+        print("Shift: ", i)
         new_str = ""
         for num in numbers:
             if (isinstance(num, int)):
